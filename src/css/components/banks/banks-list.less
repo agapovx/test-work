@@ -1,0 +1,49 @@
+.banks-list {
+  .bl {
+    &_bank-item {
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+    }
+
+    &_title {
+      margin-bottom: 20px;
+    }
+
+    &_actions-wrapper {
+      display: flex;
+      justify-content: center;
+
+      margin-bottom: 30px;
+    }
+
+    &_search {
+      margin-bottom: 10px;
+      border: none;
+      border-bottom: 1px solid @blSearchBorderColor;
+    }
+
+    &_actions {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &_action-button {
+      color: @blActionButtonTextColor;
+      background-color: @blActionButtonBGcolor;
+
+      border: 1px solid @blActionBorderColor;
+
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+
+    &_bank-items {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+}

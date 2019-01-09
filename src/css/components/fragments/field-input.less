@@ -1,0 +1,21 @@
+.field-input-wrapper {
+  display: flex;
+  justify-content: center;
+  .fiw {
+    &_label {
+      display: flex;
+      flex-direction: column;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+    }
+
+    &_input {
+      padding: 5px;
+
+      border: none;
+      border-bottom: 1px solid @fiBorderColor;
+    }
+  }
+}

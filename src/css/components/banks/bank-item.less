@@ -1,0 +1,39 @@
+.bank-item {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  padding: 50px 30px;
+
+  min-width: 120px;
+
+  border: 1px solid @biBorderColor;
+
+  border-radius: 5px;
+
+  .bi {
+    &_edit-button {
+      margin-right: 10px;
+    }
+
+    &_info-wrapper {
+      margin-bottom: 20px;
+    }
+
+    &_info-block {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &_info-title {
+      margin-right: 30px;
+    }
+  }
+
+  .bank-logic-form {
+    margin-bottom: 20px;
+  }
+}
