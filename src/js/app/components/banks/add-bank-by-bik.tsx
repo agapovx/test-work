@@ -36,6 +36,7 @@ const errors = {
   bikValid: 'БИК должен состоять из 9 символов',
   notAvaliable: 'Банк с данным БИК уже существует',
   notFound: 'Данные банка по указанному БИК не найдены',
+  oops: 'Что-то пошло не так)',
 };
 
 export class AddBankByBik extends React.Component<AddBankByBikProps, AddBankByBikState> {
@@ -130,6 +131,10 @@ export class AddBankByBik extends React.Component<AddBankByBikProps, AddBankByBi
   private _getBank = async () => {
     const data: bankDataFromApi = await this._getBankInfoByBik();
     this._disableLoading();
+
+    if (!data) {
+      this.setState({ errorFields: ['oops'] });
+    }
     if (data.error) {
       this.setState({ errorFields: ['notFound'] });
       return null;
