@@ -129,7 +129,7 @@ export class AddBankByBik extends React.Component<AddBankByBikProps, AddBankByBi
    * Если были получены некорректные данные, выводим ошибку, иначе отправляем данные в стор
    */
   private _getBank = async () => {
-    const data: bankDataFromApi = await this._getBankInfoByBik();
+    const data: bankDataFromApi = await this._loadBankInfo();
     this._disableLoading();
 
     if (!data) {
@@ -149,16 +149,6 @@ export class AddBankByBik extends React.Component<AddBankByBikProps, AddBankByBi
     };
 
     return bank;
-  };
-
-  private _getBankInfoByBik = async () => {
-    try {
-      const tasks = await this._loadBankInfo();
-      return tasks;
-    } catch (error) {
-      this._disableLoading();
-      console.log('Не было получено данных в ответе');
-    }
   };
 
   private _loadBankInfo = async () => {
