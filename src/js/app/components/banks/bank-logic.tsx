@@ -49,7 +49,7 @@ export abstract class BankLogic<
   };
 
   protected _onBikChange = (e): void => {
-    if (this._validateNumField(e.target.value, 9)) {
+    if (validateNumField(e.target.value, 9)) {
       this.setState({
         bik: e.target.value,
       });
@@ -57,7 +57,7 @@ export abstract class BankLogic<
   };
 
   protected _onAccounthange = (e): void => {
-    if (this._validateNumField(e.target.value, 15)) {
+    if (validateNumField(e.target.value, 15)) {
       this.setState({
         account: e.target.value,
       });
@@ -73,16 +73,6 @@ export abstract class BankLogic<
   };
 
   /**
-   * Проверяет значение на число с заданной длиной
-   * @param value Значение
-   * @param length Максимальная длина значения
-   */
-  private _validateNumField(value: string, length: number): boolean {
-    if (value.length <= length && (value.match(/^\d+$/) || value.length === 0)) return true;
-    return false;
-  }
-
-  /**
    * Проверяем все поля для заполнения на валидность
    */
   protected _validateFields = (): boolean => {
@@ -94,7 +84,7 @@ export abstract class BankLogic<
     if (this.state.account.length === 0) errorFields.push('account');
     if (this.state.address.length === 0) errorFields.push('address');
     if (this.state.name.length === 0) errorFields.push('name');
-    if (!errorFields.includes('bik') && !this._checkBik()) errorFields.push('notAvaliable');
+    if (!this._checkBik()) errorFields.push('notAvaliable');
     if (errorFields.length === 0) return true;
 
     this.setState({
@@ -138,14 +128,7 @@ export abstract class BankLogic<
   }
 
   protected _renderErrors() {
-    if (this.state.errorFields.length === 0) return null;
-    return this.state.errorFields.map((errorFieldName: string) => (
-      <Error key={errorFieldName} title={errors[errorFieldName]} extraClass="blf_field-error" />
-    ));
-  }
-
-  protected _renderError(title: string) {
-    return <Error title={title} extraClass="blf_field-error" />;
+    return renderErrors(this.state.errorFields, errors, 'blf_field-error');
   }
 
   protected _onSubmit = (e): void => {
@@ -159,11 +142,34 @@ export abstract class BankLogic<
   protected _buildBankFromState = (id?: number): bank => {
     const banksLength: number = this.props.banks.length + 1;
     return {
-      bik: Number(this.state.bik),
-      account: Number(this.state.account),
+      bik: this.state.bik,
+      account: this.state.account,
       name: this.state.name,
       address: this.state.address,
       id: id ? id : banksLength,
     };
   };
+}
+
+/**
+ * Проверяет значение на число с заданной длиной
+ * @param value Значение
+ * @param length Максимальная длина значения
+ */
+export function validateNumField(value: string, length: number): boolean {
+  if (value.length <= length && (value.match(/^\d+$/) || value.length === 0)) return true;
+  return false;
+}
+
+/**
+ * Рендерит список ошибок
+ * @param errorFields Поля с ошибками
+ * @param errorsTemplate Заготовка с сообщениями ошибок по ключу
+ * @param extraClass Экстракласс для ошибки
+ */
+export function renderErrors(errorFields: string[], errorsTemplate, extraClass: string = '') {
+  if (errorFields.length === 0) return null;
+  return errorFields.map((errorFieldName: string) => (
+    <Error key={errorFieldName} title={errorsTemplate[errorFieldName]} extraClass={extraClass} />
+  ));
 }

@@ -118,9 +118,9 @@ export class BanksList extends React.Component<BanksListProps, BanksListState> {
   private _filterBanks = (a: bank, b: bank) => {
     switch (this.state.sortType) {
       case bankSorts.bik:
-        return a.bik - b.bik;
+        return Number(a.bik) - Number(b.bik);
       case bankSorts.bikReverse:
-        return b.bik - a.bik;
+        return Number(b.bik) - Number(a.bik);
       case bankSorts.name:
         return a.name > b.name ? 1 : -1;
       case bankSorts.nameReverse:

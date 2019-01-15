@@ -8,6 +8,8 @@ import { ADD_BANK } from '../../reducers/banks';
 import { BankLogic, BankLogicProps, BankLogicState } from './bank-logic';
 import { bankFields, SAVE_BANK_FIELDS, RESET_BANK_FIELDS } from '../../reducers/bank-fields';
 import Button from '../fragments/button';
+import * as cn from 'classnames';
+import { AddBankByBik } from './add-bank-by-bik';
 
 interface AddBankFormProps extends BankLogicProps {
   addBank: (bank: bank) => void;
@@ -16,8 +18,14 @@ interface AddBankFormProps extends BankLogicProps {
   bankFields: bankFields;
 }
 
+enum ADD_TYPE {
+  manually = 'manually',
+  online = 'online',
+}
+
 interface AddBankFormState extends BankLogicState {
   successfullyPushedData: boolean;
+  addType: string;
 }
 
 /**
@@ -34,6 +42,7 @@ export class AddBankForm extends BankLogic<AddBankFormProps, AddBankFormState> {
       address: this.props.bankFields.address,
       errorFields: [],
       successfullyPushedData: false,
+      addType: ADD_TYPE.manually,
     };
   }
 
@@ -48,19 +57,57 @@ export class AddBankForm extends BankLogic<AddBankFormProps, AddBankFormState> {
   _buttonTitle = 'Добавить';
 
   render() {
+    if (this.state.successfullyPushedData) return this._renderSuccess();
     return (
       <section className="add-bank-form">
         <h2 className="abf_title">Добавить банк</h2>
-        {this.state.successfullyPushedData ? this._renderSuccess() : this._renderFields()}
+        <div className="abf_add-type-wrapper">
+          <Button
+            onClick={this._setManuallyType}
+            extraClass={cn('abf_switch-type-button', { ignored: this.state.addType === ADD_TYPE.online })}>
+            Вручную
+          </Button>
+          <Button
+            onClick={this._setOnlineType}
+            extraClass={cn('abf_switch-type-button', { ignored: this.state.addType === ADD_TYPE.manually })}>
+            БИК Онлайн
+          </Button>
+        </div>
+        {this.state.addType === ADD_TYPE.manually ? this._renderFields() : this._renderAddOnline()}
       </section>
     );
   }
 
+  private _setManuallyType = () => {
+    this.setState({ addType: ADD_TYPE.manually });
+  };
+
+  private _setOnlineType = () => {
+    // сбрасываем поля с ошибками при переходе на другой тип добавления
+    this.setState({ errorFields: [] });
+    this.setState({ addType: ADD_TYPE.online });
+  };
+
+  protected _renderAddManual = () => {
+    this._renderFields();
+  };
+
+  protected _renderAddOnline = () => {
+    return (
+      <AddBankByBik
+        setSuccess={this._setSuccess}
+        addBank={this._addBank}
+        checkBik={this._checkBik}
+        banksLength={this.props.banks.length}
+      />
+    );
+  };
+
   protected _renderSuccess() {
     return (
-      <div className="abf_success-wrapper">
-        <div className="abf_success-title">Банк был успешно добавлен</div>
-        <Button extraClass="abf_success-button" onClick={this._disableSuccess}>
+      <div className="success-wrapper">
+        <div className="sw_title">Банк был успешно добавлен</div>
+        <Button extraClass="sw_success-button" onClick={this._disableSuccess}>
           Понял, принял :)
         </Button>
       </div>
@@ -70,11 +117,11 @@ export class AddBankForm extends BankLogic<AddBankFormProps, AddBankFormState> {
   /**
    * Проверяем бик банка на доступность
    */
-  protected _checkBik = (): boolean => {
+  protected _checkBik = (bik?: string): boolean => {
     // если нет данных о банках, значит БИК точно свободен
     if (this.props.banks.length === 0) return true;
 
-    const stateBikValue: number = Number(this.state.bik);
+    const stateBikValue: string = bik ? bik : this.state.bik;
 
     return findIndex(this.props.banks, (bank: bank) => bank.bik === stateBikValue) !== -1 ? false : true;
   };
@@ -85,8 +132,12 @@ export class AddBankForm extends BankLogic<AddBankFormProps, AddBankFormState> {
   protected _pushData = (): void => {
     this._resetFields();
     const bank: bank = this._buildBankFromState();
-    this.props.addBank(bank);
+    this._addBank(bank);
     this._setSuccess();
+  };
+
+  private _addBank = (bank: bank) => {
+    this.props.addBank(bank);
   };
 
   private _setSuccess = (): void => {

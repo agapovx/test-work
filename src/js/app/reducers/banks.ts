@@ -13,9 +13,9 @@ const initialBankList = (): bank[] | [] => {
 };
 
 export interface bank {
-  bik: number;
+  bik: string;
   name: string;
-  account: number;
+  account: string;
   address: string;
   id: number;
 }

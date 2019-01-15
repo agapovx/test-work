@@ -1,7 +1,30 @@
 .add-bank-form {
   .abf {
-    &_success-title {
-      margin-bottom: 20px;
+    &_switch-type-button {
+      &.ignored {
+        background-color: @abfIgnoredButtonBackgroundColor;
+        color: @abfIgnoredButtonColor;
+
+        border: 1px solid;
+      }
+
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
+
+    &_add-type-wrapper {
+      padding: 10px 0 30px;
+    }
+  }
+}
+
+.success-wrapper {
+  padding: 20px 0;
+
+  .sw {
+    &_title {
+      margin-bottom: 10px;
     }
   }
 }

@@ -13,7 +13,9 @@
   "author": "Ilya Agapov <ilyahljm@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "classnames": "^2.2.6",
     "lodash": "4.17.11",
+    "node-fetch": "^2.3.0",
     "react": "16.6.3",
     "react-dom": "16.6.3",
     "react-redux": "5.1.1",

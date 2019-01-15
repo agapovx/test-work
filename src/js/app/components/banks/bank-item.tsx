@@ -91,7 +91,7 @@ export class BankItem extends BankLogic<BankItemProps, BankItemState> {
    * Проверяем бик банка на доступность
    */
   protected _checkBik = (): boolean => {
-    const stateBikValue: number = Number(this.state.bik);
+    const stateBikValue: string = this.state.bik;
 
     return findIndex(this.props.banks, (bank: bank) => bank.bik === stateBikValue && bank.id !== this.state.id) !== -1
       ? false
