@@ -151,6 +151,7 @@ export class AddBankByBik extends React.Component<AddBankByBikProps, AddBankByBi
       const tasks = await this._loadBankInfo();
       return tasks;
     } catch (error) {
+      this._disableLoading();
       console.log('Не было получено данных в ответе');
     }
   };
@@ -163,6 +164,7 @@ export class AddBankByBik extends React.Component<AddBankByBikProps, AddBankByBi
       const data = await response.json();
       return data;
     } catch (error) {
+      this._disableLoading();
       throw new Error('Не удалось загрузить данные');
     }
   };
